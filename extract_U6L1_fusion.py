@@ -19,6 +19,7 @@ gtf_input = sys.argv[10] #whole sorted annotation file
 gtf_file = sys.argv[11] #gtf_file includes only gene annotation
 flash_dir = sys.argv[12] #where flash installed 
 fpkm_file = sys.argv[13] #expression level input from the result of cuffliks
+picard_dir = sys.argv[14] #directory for picard tools
 whole_sam_input = f"{sambam_dir}/{sample}/{sam_name}"
 whole_bam_input = f"{sambam_dir}/{sample}/{bam_name}"
 os.system(f"mkdir {working_dir}"
@@ -192,7 +193,7 @@ def single_alignemnt(data_type):
     os.system(f"samtools view -bhS {alignment_dir}{sample}_{data_type}_single.sam > {alignment_dir}{sample}_{data_type}_single.bam")
     os.system(f"samtools sort {alignment_dir}{sample}_{data_type}_single.bam {alignment_dir}{sample}_{data_type}_single_sort")
     os.system(f"samtools rmdup {alignment_dir}{sample}_{data_type}_single_sort.bam {alignment_dir}{sample}_{data_type}_single_sort_rmdup_1.bam")
-    os.system(f"java -jar /mnt/EXT/Mills-data/yifwang/bin/lib/picard/dist/picard.jar MarkDuplicates REMOVE_DUPLICATES=true AS=true INPUT={alignment_dir}{sample}_{data_type}_single_sort_rmdup_1.bam OUTPUT={alignment_dir}{sample}_{data_type}_single_sort_rmdup.bam METRICS_FILE={alignment_dir}{sample}_{data_type}_single_metrics.txt")
+    os.system(f"java -jar {picard_dir}/picard.jar MarkDuplicates REMOVE_DUPLICATES=true `AS=true INPUT={alignment_dir}{sample}_{data_type}_single_sort_rmdup_1.bam OUTPUT={alignment_dir}{sample}_{data_type}_single_sort_rmdup.bam METRICS_FILE={alignment_dir}{sample}_{data_type}_single_metrics.txt")
     os.system(f"samtools index {alignment_dir}{sample}_{data_type}_single_sort_rmdup.bam")
     os.system(f"rm {alignment_dir}{sample}_{data_type}_single.bam")
 single_alignemnt("other")
